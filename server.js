@@ -6,6 +6,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// const cors = require('cors');
+// app.use(cors());
+
+
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -44,3 +48,18 @@ app.get('/api/jobs', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+app.post('/api/apply', async (req, res) => {
+  const { jobId, name, email, resume } = req.body;
+
+  try {
+    const sql = 'INSERT INTO applications (job_id, name, email, resume) VALUES (?, ?, ?, ?)';
+    await db.query(sql, [jobId, name, email, resume]);
+    res.status(201).json({ message: 'Application submitted successfully' });
+  } catch (err) {
+    console.error("❌ Error inserting application:", err);
+    res.status(500).json({ message: 'Failed to apply' });
+  }
+});
+
+

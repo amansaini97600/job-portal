@@ -43,7 +43,16 @@ const PostJob = () => {
       <form onSubmit={handleSubmit} className="post-job-form" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <input type="text" name="title" placeholder="Job Title" value={form.title} onChange={handleChange} required />
         <input type="text" name="company" placeholder="Company Name" value={form.company} onChange={handleChange} required />
-        <input type="text" name="type" placeholder="Job Type (e.g. Full-time, Part-time)" value={form.type} onChange={handleChange} required />
+        {/* <input type="text" name="type" placeholder="Job Type (e.g. Full-time, Part-time)" value={form.type} onChange={handleChange} required /> */}
+
+        <select name="type" value={form.type} onChange={handleChange} required>
+          <option value="">Select Job Type</option>
+          <option value="Part-Time">Part-Time</option>
+          <option value="Full-Time">Full-Time</option>
+          <option value="Internship">Internship</option>
+        </select>
+
+
         <input type="text" name="skills" placeholder="Skills Required" value={form.skills} onChange={handleChange} required />
         <input type="text" name="salary" placeholder="Salary (optional)" value={form.salary} onChange={handleChange} />
         <input type="text" name="contact" placeholder="Contact Information" value={form.contact} onChange={handleChange} required />

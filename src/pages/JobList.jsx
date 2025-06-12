@@ -1,25 +1,46 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useLocation, Link } from "react-router-dom";
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const applyBtnStyle = {
-  margin: "1rem",
-  padding: "0.5rem 1rem",
-  backgroundColor: "#4caf50",
-  color: "#fff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer"
-};
+    margin: "1rem",
+    padding: "0.5rem 1rem",
+    backgroundColor: "#4caf50",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer"
+  };
 
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+
+
+
+  const query = useQuery();
+  const search = query.get("search")?.toLowerCase() || "";
+  const type = query.get("type") || "";
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/jobs")
-      .then(res => setJobs(res.data))
+      .then(res => {
+        const filtered = res.data.filter(job => {
+          const matchesSearch =
+            job.title.toLowerCase().includes(search) ||
+            job.company.toLowerCase().includes(search) ||
+            job.location.toLowerCase().includes(search);
+          const matchesType = type ? job.type === type : true;
+          return matchesSearch && matchesType;
+        });
+        setJobs(filtered);
+      })
       .catch(err => console.error("Failed to fetch jobs", err));
-  }, []);
+  }, [search, type]);
+
 
   const handleApply = (job) => {
     setSelectedJob(job);
@@ -44,7 +65,12 @@ const JobList = () => {
               <p><strong>Location:</strong> {job.location}</p>
               <p><strong>Contact:</strong> {job.contact}</p>
               <small>🕒 Posted on: {new Date(job.created_at).toLocaleString()}</small>
-              <button onClick={() => handleApply(job)} style={applyBtnStyle}>Apply Now</button>
+              <Link to={`/apply/${job.id}`}>
+                <button className="mt-4 px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+                  Apply Now
+                </button>
+              </Link>
+
             </div>
           ))}
         </div>
