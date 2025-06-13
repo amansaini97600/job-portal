@@ -14,7 +14,7 @@ const ApplyJob = () => {
         e.preventDefault();
         try {
             await axios.post("http://localhost:3000/api/apply", {
-                jobId: jobIdFromURL,
+                jobId: id,
                 name: form.name,
                 email: form.email,
                 resume: form.resume,
@@ -34,8 +34,12 @@ const ApplyJob = () => {
                 <input type="text" name="name" placeholder="Your Name" onChange={handleChange} required className="w-full p-2 border rounded" />
                 <input type="email" name="email" placeholder="Email" onChange={handleChange} required className="w-full p-2 border rounded" />
                 <textarea name="resume" placeholder="Write about yourself / paste resume" rows={5} onChange={handleChange} required className="w-full p-2 border rounded" />
-                <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Apply Now</button>
+
+                <button type="submit" className="mt-4 px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+                    Apply Now
+                </button>
             </form>
+
         </div>
     );
 };

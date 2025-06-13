@@ -49,17 +49,21 @@ app.get('/api/jobs', async (req, res) => {
   }
 });
 
-app.post('/api/apply', async (req, res) => {
-  const { jobId, name, email, resume } = req.body;
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        await axios.post("http://localhost:3000/api/apply", {
+            jobId: id, // 🔁 FIXED: use id from useParams
+            name: form.name,
+            email: form.email,
+            resume: form.resume,
+        });
+        alert("Application sent successfully!");
+    } catch (error) {
+        console.error("❌ Application Error:", error);
+        alert("Failed to apply");
+    }
+};
 
-  try {
-    const sql = 'INSERT INTO applications (job_id, name, email, resume) VALUES (?, ?, ?, ?)';
-    await db.query(sql, [jobId, name, email, resume]);
-    res.status(201).json({ message: 'Application submitted successfully' });
-  } catch (err) {
-    console.error("❌ Error inserting application:", err);
-    res.status(500).json({ message: 'Failed to apply' });
-  }
-});
 
 
