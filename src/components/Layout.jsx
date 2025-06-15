@@ -5,7 +5,8 @@ import { Menu } from "lucide-react";
 
 const Layout = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const isLoggedIn = false; // replace with real auth later
+    // const isLoggedIn = false; // replace with real auth later
+      const isLoggedIn = localStorage.getItem("user");
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -50,14 +51,19 @@ const Layout = () => {
                     <button className="bg-white text-blue-900 px-3 py-1 rounded">Search</button>
                 </form>
 
-
-                <div>
+                <div className="space-x-4">
                     {isLoggedIn ? (
-                        <button className="bg-white text-blue-900 px-3 py-1 rounded">Profile</button>
+                        <>
+                            <Link to="/logout">Logout</Link>
+                        </>
                     ) : (
-                        <Link to="/login" className="bg-white text-blue-900 px-3 py-1 rounded">Login</Link>
+                        <>
+                            <Link to="/login">Login</Link>
+                            <Link to="/register">Register</Link>
+                        </>
                     )}
                 </div>
+
             </header>
 
             <div className="flex flex-1">
