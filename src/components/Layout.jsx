@@ -1,12 +1,43 @@
 // src/components/Layout.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Menu } from "lucide-react";
 
 const Layout = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     // const isLoggedIn = false; // replace with real auth later
-      const isLoggedIn = localStorage.getItem("user");
+
+    useEffect(() => {
+        const checkLogin = () => {
+            const user = localStorage.getItem("user");
+            setIsLoggedIn(!!user);
+        };
+
+        checkLogin(); // initial check
+
+        window.addEventListener("login-status-changed", checkLogin); // 🔥 listen custom
+        window.addEventListener("storage", checkLogin); // optional, multi-tab support
+
+        return () => {
+            window.removeEventListener("login-status-changed", checkLogin);
+            window.removeEventListener("storage", checkLogin);
+        };
+    }, []);
+
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const user = localStorage.getItem("user");
+            setIsLoggedIn(!!user);
+        };
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+        };
+    }, []);
+
 
     return (
         <div className="min-h-screen flex flex-col">

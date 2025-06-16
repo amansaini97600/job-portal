@@ -196,6 +196,37 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
+// POST /api/google-login
+app.post("/api/google-login", async (req, res) => {
+  const { name, email, picture } = req.body;
+
+  if (!email || !name) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  try {
+    const [rows] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+
+    let user;
+    if (rows.length === 0) {
+      // Register new user
+      const [result] = await db
+        .promise()
+        .query("INSERT INTO users (name, email, picture) VALUES (?, ?, ?)", [name, email, picture]);
+      user = { id: result.insertId, name, email, picture };
+    } else {
+      user = rows[0];
+    }
+
+    return res.json({ success: true, user });
+  } catch (err) {
+    console.error("Google login error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
 
 
 

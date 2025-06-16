@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -66,7 +67,7 @@ const JobList = () => {
               <p><strong>Contact:</strong> {job.contact}</p>
               <small>🕒 Posted on: {new Date(job.created_at).toLocaleString()}</small>
               <Link to={`/apply/${job.id}`}>
-                <button className="mt-4 px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
+                <button className="mt-4 ml-4 px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800">
                   Apply Now
                 </button>
               </Link>
