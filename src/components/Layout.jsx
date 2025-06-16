@@ -94,6 +94,8 @@ const Layout = () => {
                         </>
                     )}
                 </div>
+                {isLoggedIn && <Link to="/profile">My Profile</Link>}
+
 
             </header>
 

@@ -13,6 +13,7 @@ import AdminLayout from "../admin/AdminLayout";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Logout from "../pages/Logout";
+import Profile from "../pages/Profile";
 
 const AppRoutes = () => {
   return (
@@ -28,6 +29,7 @@ const AppRoutes = () => {
       <Route path="register" element={<Register/>} />
       <Route path="post-job" element={<PostJob />} />
       <Route path="apply/:id" element={<ApplyJob />} />
+      <Route path="/profile" element={<Profile />} />
     </Route>
 
     {/* Admin Login - OUTSIDE Layout */}

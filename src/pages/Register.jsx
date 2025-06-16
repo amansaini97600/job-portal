@@ -13,38 +13,48 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:3000/api/register", form);
-      if (res.data.success) {
-        alert("Registration successful");
-        window.dispatchEvent(new Event("login-status-changed"));
-        navigate("/login");
-      } else {
-        alert("Registration failed");
-      }
-    } catch (error) {
-      console.error("❌ Registration Error:", error);
-      alert("Server error");
+  e.preventDefault();
+  try {
+    const res = await axios.post("http://localhost:3000/api/register", form);
+
+    if (res.data.success) {
+      alert("Registration successful");
+
+      // ✅ Sirf success hone par hi user ko store karo
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      window.dispatchEvent(new Event("login-status-changed"));
+      
+      navigate("/"); // ✅ Direct home pe bhejna chaho toh
+    } else {
+      alert("Registration failed");
     }
-  };
+  } catch (error) {
+    console.error("❌ Registration Error:", error);
+    alert("Server error");
+  }
+};
 
-  // ✅ Google success handler
-  const handleGoogleSuccess = (credentialResponse) => {
-    try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      console.log("✅ Google user data:", decoded);
 
-      // You can send this data to your backend for registration/login
-      // Example: axios.post("/api/google-auth", decoded)
+  // ✅ Google success handler 
+const handleGoogleSuccess = (credentialResponse) => {
+  try {
+    const decoded = jwtDecode(credentialResponse.credential);
+    console.log("✅ Google user data:", decoded);
 
-      alert(`Welcome, ${decoded.name}`);
-      navigate("/"); // or navigate to dashboard
-    } catch (err) {
-      console.error("❌ Decode error:", err);
-      alert("Failed to decode Google token");
-    }
-  };
+    // ✅ Save user in localStorage
+    localStorage.setItem("user", JSON.stringify(decoded));
+
+    // ✅ Update UI globally
+    window.dispatchEvent(new Event("login-status-changed"));
+
+    alert(`Welcome, ${decoded.name}`);
+    navigate("/");
+  } catch (err) {
+    console.error("❌ Decode error:", err);
+    alert("Failed to decode Google token");
+  }
+};
+
 
   // ❌ Google error handler
   const handleGoogleFailure = () => {
@@ -92,7 +102,7 @@ const Register = () => {
       <p className="text-center text-gray-500">or register with google</p>
 
 
-            {/* Google Login */}
+      {/* Google Login */}
       <div className="mb-6">
         <GoogleLogin
           onSuccess={handleGoogleSuccess}

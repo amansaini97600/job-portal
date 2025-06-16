@@ -1,9 +1,10 @@
-import express from "express";
+import express, { Router } from "express";
 import mysql from "mysql2";
 import cors from "cors";
 import multer from "multer";
 import path from "path";
 import bcrypt from "bcrypt";
+
 
 
 const app = express();
@@ -225,6 +226,17 @@ app.post("/api/google-login", async (req, res) => {
   }
 });
 
+// GET /api/user/:id
+Router.get("/user/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+    res.json({ success: true, user });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 
 
